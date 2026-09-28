@@ -124,10 +124,10 @@ const About = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
-                                whileHover={{ y: -10 }}
-                                className="bg-slate-50 dark:bg-slate-950 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 group hover:border-indigo-500/30 transition-all shadow-lg hover:shadow-indigo-500/10"
+                                whileHover={{ y: -8 }}
+                                className="liquid-glass-card p-8 rounded-[2rem] group hover:border-indigo-500/40 transition-all shadow-lg hover:shadow-indigo-500/15"
                             >
-                                <div className="w-16 h-16 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-md mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                <div className="w-16 h-16 bg-white/70 dark:bg-slate-900/70 border border-white/60 dark:border-white/10 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-md mb-6 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:text-white transition-all backdrop-blur-md">
                                     {service.icon}
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{service.title}</h3>

@@ -157,13 +157,13 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   if (!isAuthenticated) {
     return (
       <motion.div
-        whileHover={{ y: -10 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-100 dark:border-slate-800 shadow-[0_32px_96px_-16px_rgba(0,0,0,0.1)] overflow-hidden group h-full"
+        whileHover={{ y: -8 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col liquid-glass-card rounded-[3rem] overflow-hidden group h-full shadow-[0_20px_50px_-10px_rgba(79,70,229,0.07)] dark:shadow-[0_25px_60px_-15px_rgba(2,6,23,0.7)]"
       >
         <div className="p-6 space-y-8 flex flex-col h-full">
           {/* FIX: constrain image height so the card never blows up to full-screen */}
-          <div className="w-full rounded-[2rem] overflow-hidden border-[6px] border-slate-50 dark:border-slate-800 bg-slate-950 shadow-xl relative shrink-0 aspect-[3/4]">
+          <div className="w-full rounded-[2rem] overflow-hidden border-[4px] border-white/60 dark:border-slate-800/80 bg-slate-950 shadow-xl relative shrink-0 aspect-[3/4]">
             {firstImage ? (
               <motion.img
                 whileHover={{ scale: 1.05 }}
@@ -177,12 +177,12 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
                 <ImageIcon size={48} className="opacity-10" />
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           </div>
 
           <div className="space-y-4 text-center pb-4 flex-1 flex flex-col justify-center">
-            <div className="inline-flex items-center gap-2 bg-indigo-600/5 text-indigo-600 px-4 py-1.5 rounded-full font-black text-[9px] uppercase tracking-[0.2em] border border-indigo-600/10 mx-auto">
-              <UserCheck size={14} className="text-indigo-400" />
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 text-indigo-600 dark:text-indigo-400 px-4 py-1.5 rounded-full font-black text-[9px] uppercase tracking-[0.2em] border border-indigo-500/20 mx-auto shadow-sm">
+              <UserCheck size={14} className="text-indigo-500 dark:text-indigo-400" />
               <span>{project.director || 'Studio Master'}</span>
             </div>
             <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-tight line-clamp-2 px-2">
@@ -219,8 +219,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
     <>
       <motion.div
-        whileHover={{ scale: 1.01 }}
-        className="flex flex-col md:flex-row bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden group w-full relative hover:shadow-lg transition-all"
+        whileHover={{ scale: 1.008 }}
+        className="flex flex-col md:flex-row liquid-glass-card rounded-2xl overflow-hidden group w-full relative transition-all"
       >
         {/* Left accent bar */}
         <div className={`hidden md:flex w-2 shrink-0 ${isPaid ? 'bg-emerald-500' : 'bg-rose-500'}`} />

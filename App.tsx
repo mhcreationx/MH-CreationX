@@ -15,6 +15,7 @@ import Analytics from './components/Analytics';
 import About from './components/About';
 import Settings from './components/Settings';
 import ClientDashboard from './components/ClientDashboard';
+import SmsManagement from './components/SmsManagement';
 import { useAppStore } from './store';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -60,6 +61,7 @@ const AnimatedRoutes = () => {
           <Route path="/analytics" element={<StaffRoute><Analytics /></StaffRoute>} />
           <Route path="/audit" element={<StaffRoute><AuditTrail /></StaffRoute>} />
           <Route path="/voucher" element={<StaffRoute><MonthlyAccounting /></StaffRoute>} />
+          <Route path="/sms" element={<StaffRoute><SmsManagement /></StaffRoute>} />
           {/* Public routes */}
           <Route path="/cash-memo/:projectId" element={<CashMemo />} />
           <Route path="/project/:projectId/:secureToken" element={<ClientPortal />} />

@@ -359,7 +359,8 @@ export const useAppStore = create<ExtendedAppState>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       // Fetch customer token/projects via NEW Endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/client-login.php`, {
+      const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+      const response = await fetch(`${apiBase}/auth/client-login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ access_code: customerId })

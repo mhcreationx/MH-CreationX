@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// Get API URL from env, default to local if not set (though .env is preferred)
-// Note: In implementation plan, we set VITE_API_URL=https://mhcreationx.top/api
-// For local dev with PHP server, user might need to proxy or adjust.
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Get API URL from env, default to /api for integrated server
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
     baseURL: API_URL,

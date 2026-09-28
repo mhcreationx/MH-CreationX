@@ -3,16 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../store';
 import {
   LayoutDashboard, LogOut, Sun, Moon, Users,
-  Shield, UserCheck, DollarSign, User as UserIcon, Receipt, Menu, X, Activity, BarChart3, Phone, Mail, LogIn, Eye, EyeOff
+  Shield, UserCheck, DollarSign, User as UserIcon, Receipt, Menu, X, Activity, BarChart3, Phone, Mail, LogIn, Eye, EyeOff, MessageSquare
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import DeviceOTPModal from './DeviceOTPModal';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import ChatWidget from './ChatWidget';
+import { chatService } from '../services/chatService';
 
 const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const {
-    isAuthenticated, login, loginCustomer, logout, theme, toggleTheme,
+    isAuthenticated, authType, login, loginCustomer, logout, theme, toggleTheme,
     currentUser, updateUser, showLoginModal, setShowLoginModal, currentCustomer, projects, customers
   } = useAppStore();
   const location = useLocation();
@@ -25,6 +27,25 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [unreadSmsCount, setUnreadSmsCount] = useState(0);
+
+  // Poll SMS unread count and send heartbeat if staff is authenticated
+  useEffect(() => {
+    if (!isAuthenticated || authType !== 'staff') return;
+
+    const checkSms = async () => {
+      try {
+        const data = await chatService.getAdminConversations('active');
+        setUnreadSmsCount(data.totalUnread || 0);
+      } catch (e) {
+        // Silent catch for background polling
+      }
+    };
+
+    checkSms();
+    const interval = setInterval(checkSms, 5000);
+    return () => clearInterval(interval);
+  }, [isAuthenticated, authType]);
 
   const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const resolveImageUrl = (url?: string) => {
@@ -110,6 +131,7 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
         {isStaff && (
           <>
             <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 mt-10 mb-4">Master Control</p>
+            <NavLink to="/sms" icon={<MessageSquare size={20} />} label="SMS / Messages" badge={unreadSmsCount} active={location.pathname === '/sms'} onClick={() => setIsMobileMenuOpen(false)} />
             <NavLink to="/customers" icon={<Users size={20} />} label="Client Registry" active={location.pathname === '/customers'} onClick={() => setIsMobileMenuOpen(false)} />
             <NavLink to="/finance" icon={<DollarSign size={20} />} label="Treasury Hub" active={location.pathname === '/finance'} onClick={() => setIsMobileMenuOpen(false)} />
             <NavLink to="/analytics" icon={<BarChart3 size={20} />} label="Engagement" active={location.pathname === '/analytics'} onClick={() => setIsMobileMenuOpen(false)} />
@@ -167,10 +189,10 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   );
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
+    <div className="flex min-h-screen bg-slate-50/50 dark:bg-slate-950/80 text-slate-900 dark:text-white transition-colors duration-500">
       {/* Sidebar - Desktop */}
       {showSidebar && (
-        <aside className="no-print hidden md:flex flex-col w-[320px] glass border-r border-slate-200 dark:border-slate-800 sticky top-0 h-screen">
+        <aside className="no-print hidden md:flex flex-col w-[320px] glass border-r border-white/60 dark:border-white/10 sticky top-0 h-screen z-sticky shadow-2xl backdrop-blur-2xl">
           <NavContent />
         </aside>
       )}
@@ -179,8 +201,8 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <div className="no-print fixed inset-0 z-modal-backdrop md:hidden">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMobileMenuOpen(false)} className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm" />
-            <motion.aside initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="absolute left-0 top-0 bottom-0 w-[300px] bg-white dark:bg-slate-900 flex flex-col shadow-2xl">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMobileMenuOpen(false)} className="absolute inset-0 bg-slate-950/70 backdrop-blur-md" />
+            <motion.aside initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="absolute left-0 top-0 bottom-0 w-[300px] glass bg-white/95 dark:bg-slate-900/95 flex flex-col shadow-2xl border-r border-white/20">
               <NavContent />
             </motion.aside>
           </div>
@@ -189,11 +211,11 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 glass border-b border-slate-200 dark:border-slate-800 backdrop-blur-xl h-20 px-6 md:px-10">
+        <header className="fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 glass border-b border-white/60 dark:border-white/10 backdrop-blur-2xl h-20 px-6 md:px-10">
           <div className="flex items-center justify-between h-full w-full">
             <div className="flex items-center gap-6">
               <Link to="/" className="flex flex-col">
-                <span className="font-black tracking-tighter text-xl text-slate-900 dark:text-white">MH Creation X</span>
+                <span className="font-black tracking-tighter text-xl text-slate-900 dark:text-white bg-clip-text">MH Creation X</span>
               </Link>
             </div>
 
@@ -202,7 +224,7 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
               {isAuthenticated && (
                 <button
                   onClick={() => setIsMobileMenuOpen(true)}
-                  className="md:hidden p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                  className="md:hidden p-2.5 rounded-xl hover:bg-slate-100/60 dark:hover:bg-slate-800/60 transition-colors text-slate-600 dark:text-slate-400"
                   aria-label="Open menu"
                 >
                   <Menu size={20} />
@@ -212,14 +234,14 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
               {/* Dark Mode Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                className="p-2.5 rounded-2xl glass hover:border-indigo-500/40 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all duration-300 text-slate-700 dark:text-slate-300 shadow-sm cursor-pointer"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                {theme === 'dark' ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} className="text-indigo-600" />}
               </button>
 
               {!isAuthenticated && (
-                <button onClick={() => setShowLoginModal(true)} className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer">
+                <button onClick={() => setShowLoginModal(true)} className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border border-white/20">
                   <LogIn size={16} /> Login
                 </button>
               )}
@@ -258,14 +280,14 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       <AnimatePresence>
         {showLoginModal && (
           <div className="fixed inset-0 z-modal flex items-center justify-center p-6 no-print">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLoginModal(false)} className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" />
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-[3.5rem] p-10 md:p-12 shadow-2xl border border-white/10 overflow-hidden">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLoginModal(false)} className="absolute inset-0 bg-slate-950/75 backdrop-blur-xl" />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-md liquid-glass-card bg-white/90 dark:bg-slate-900/90 rounded-[3.5rem] p-10 md:p-12 shadow-2xl border border-white/60 dark:border-white/10 overflow-hidden backdrop-blur-2xl">
               <div className="absolute top-0 right-0 p-8">
                 <button onClick={() => setShowLoginModal(false)} className="text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"><X size={24} /></button>
               </div>
 
               <div className="text-center mb-10">
-                <div className="w-20 h-20 bg-indigo-600/10 text-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-gradient-to-tr from-blue-600/15 via-indigo-600/15 to-purple-600/15 text-indigo-600 dark:text-indigo-400 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-indigo-500/20 shadow-inner">
                   {isAdminMode ? <Shield size={36} /> : <UserIcon size={36} />}
                 </div>
                 <h3 className="text-3xl font-black tracking-tighter uppercase">{isAdminMode ? 'System Auth' : 'Client Access'}</h3>
@@ -363,7 +385,7 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold text-sm shadow-lg shadow-indigo-600/20 hover:bg-indigo-500 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
                 >
                   {isLoggingIn ? 'Logging in...' : 'Sign In'}
                 </button>
@@ -390,19 +412,32 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
           onClose={() => setShowForgotPassword(false)}
         />
       )}
+
+      {/* Floating Live SMS / Chat Widget - Persistent across all pages */}
+      <ChatWidget />
     </div>
   );
 };
 
-const NavLink = ({ to, icon, label, active, onClick }: any) => (
+const NavLink = ({ to, icon, label, active, onClick, badge }: any) => (
   <Link
     to={to}
     onClick={onClick}
-    className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all ${active ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 translate-x-1' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:translate-x-1'
-      }`}
+    className={`flex items-center justify-between px-6 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all duration-300 ${
+      active
+        ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30 border border-white/20 translate-x-1'
+        : 'text-slate-600 dark:text-slate-400 hover:bg-white/60 dark:hover:bg-slate-800/60 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border hover:border-white/40 dark:hover:border-white/10 hover:translate-x-1'
+    }`}
   >
-    {icon}
-    <span>{label}</span>
+    <div className="flex items-center gap-4">
+      {icon}
+      <span>{label}</span>
+    </div>
+    {badge && badge > 0 ? (
+      <span className="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+        {badge}
+      </span>
+    ) : null}
   </Link>
 );
 

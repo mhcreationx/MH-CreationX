@@ -90,7 +90,8 @@ const CustomerManagement: React.FC = () => {
     formData.append('image', file);
     try {
       setLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/customers/upload-profile.php`, {
+      const uploadUrl = `${(import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')}/customers/upload-profile.php`;
+      const res = await fetch(uploadUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('mh_auth_token') || ''}`

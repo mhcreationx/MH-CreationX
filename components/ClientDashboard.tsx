@@ -19,7 +19,8 @@ const ClientDashboard: React.FC = () => {
     const handleDownload = async (projectId: string) => {
         try {
             const token = localStorage.getItem('mh_auth_token');
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/projects/download.php?projectId=${projectId}`, {
+            const apiBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+            const response = await fetch(`${apiBase}/projects/download.php?projectId=${projectId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
