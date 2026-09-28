@@ -187,9 +187,9 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
 
           {/* Popup Container: Fluid responsive scale up to max-w-[90vw] & max-h-[85vh] */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 8 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-[90vw] lg:max-w-[1080px] max-h-[85vh] flex flex-col items-center justify-center"
@@ -208,8 +208,8 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
                 backgroundColor: 'rgba(15, 23, 42, 0.45)',
                 backdropFilter: 'blur(20px) saturate(140%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.40)'
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.35)'
               }}
             >
               
@@ -233,10 +233,10 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
                 onClick={handleClose}
                 aria-label="Close notice"
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(255, 255, 255, 0.08)',
                   backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)'
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)'
                 }}
                 className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-white/[0.18] active:scale-95 text-white/85 hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30"
               >
@@ -249,6 +249,7 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
                   src={activeConfig.imageUrl}
                   alt="Announcement notice"
                   className="w-full h-full object-contain pointer-events-none select-none"
+                  style={{ filter: 'none', WebkitFilter: 'none' }}
                   loading="eager"
                   decoding="async"
                 />
@@ -279,21 +280,21 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
                   </div>
                 )}
 
-                {/* Primary Minimal Glass CLOSE Button */}
+                {/* Primary Minimal Glass Close Button */}
                 <button
                   type="button"
                   onClick={handleClose}
                   aria-label="Close notice"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'rgba(255, 255, 255, 0.08)',
                     backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)'
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
                   }}
-                  className="px-8 sm:px-11 py-2 sm:py-2.5 rounded-full hover:bg-white/[0.14] active:scale-95 text-white/90 hover:text-white font-bold text-xs uppercase tracking-widest transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30 flex items-center gap-2"
+                  className="px-8 sm:px-11 py-2 sm:py-2.5 rounded-full hover:bg-white/[0.18] active:scale-95 text-white/90 hover:text-white font-medium sm:font-semibold text-xs tracking-wider transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/30 flex items-center gap-2"
                 >
                   <X size={15} />
-                  <span>CLOSE</span>
+                  <span>Close</span>
                 </button>
               </div>
 
