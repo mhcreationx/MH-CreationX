@@ -118,6 +118,7 @@ export interface Expense {
 
 export interface User {
   id: string;
+  name?: string;
   username: string;
   email?: string;
   pass: string;

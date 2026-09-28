@@ -5,7 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { db, DbProject, DbCustomer, DbExpense, DbUser } from './db.ts';
+import { db, DbProject, DbCustomer, DbExpense, DbUser } from './db';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1210,4 +1210,60 @@ apiRouter.post('/chat/admin/archive.php', (req: Request, res: Response) => {
 
   return res.json({ success: true, conversation: conv });
 });
+
+// ==========================================
+// NOTICE / ANNOUNCEMENT ENDPOINTS (ISOLATED)
+// ==========================================
+
+const noticeConfigPath = path.resolve(__dirname, 'notice.json');
+
+const getDefaultNotice = () => ({
+  enabled: true,
+  imageUrl: '/notice-banner.svg',
+  imageName: 'notice-banner.svg',
+  alwaysActive: true,
+  startDate: new Date().toISOString().split('T')[0],
+  startTime: '09:00',
+  endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  endTime: '23:59',
+  frequency: 'session',
+  autoCloseEnabled: false,
+  autoCloseDuration: 10,
+  lastUpdated: new Date().toISOString(),
+  updatedBy: 'Admin'
+});
+
+apiRouter.get('/notice/settings.php', (req: Request, res: Response) => {
+  try {
+    if (fs.existsSync(noticeConfigPath)) {
+      const raw = fs.readFileSync(noticeConfigPath, 'utf-8');
+      return res.json(JSON.parse(raw));
+    }
+  } catch (e) {
+    console.error('Error reading notice config:', e);
+  }
+  return res.json(getDefaultNotice());
+});
+
+apiRouter.post('/notice/settings.php', (req: Request, res: Response) => {
+  const decoded = extractUser(req);
+  if (!decoded || decoded.type !== 'staff') {
+    return res.status(401).json({ error: 'Unauthorized: Admin access required' });
+  }
+
+  try {
+    const config = {
+      ...getDefaultNotice(),
+      ...req.body,
+      lastUpdated: new Date().toISOString(),
+      updatedBy: decoded.name || decoded.email || 'Admin'
+    };
+    fs.writeFileSync(noticeConfigPath, JSON.stringify(config, null, 2), 'utf-8');
+    return res.json({ success: true, config });
+  } catch (e) {
+    console.error('Error saving notice config:', e);
+    return res.status(500).json({ error: 'Failed to save notice configuration' });
+  }
+});
+
 

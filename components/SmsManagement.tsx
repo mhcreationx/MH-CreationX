@@ -105,7 +105,7 @@ export const SmsManagement: React.FC = () => {
 
     setIsSending(true);
     try {
-      const currentSenderName = currentUser?.name || ROTATING_NAMES[nameRotationIndex];
+      const currentSenderName = currentUser?.name || currentUser?.username || ROTATING_NAMES[nameRotationIndex];
       const res = await chatService.sendAdminReply({
         conversationId: selectedConvId,
         message: text,
@@ -436,7 +436,7 @@ export const SmsManagement: React.FC = () => {
                   type="text"
                   value={replyText}
                   onChange={e => setReplyText(e.target.value)}
-                  placeholder={`Reply as ${currentUser?.name || ROTATING_NAMES[nameRotationIndex]}...`}
+                  placeholder={`Reply as ${currentUser?.name || currentUser?.username || ROTATING_NAMES[nameRotationIndex]}...`}
                   disabled={isSending}
                   className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3.5 text-xs font-semibold outline-none focus:border-indigo-500 text-slate-900 dark:text-white placeholder:text-slate-400 transition-all"
                 />

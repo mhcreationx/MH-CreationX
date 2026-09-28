@@ -16,6 +16,8 @@ import About from './components/About';
 import Settings from './components/Settings';
 import ClientDashboard from './components/ClientDashboard';
 import SmsManagement from './components/SmsManagement';
+import NoticeControl from './components/NoticeControl';
+import NoticePopup from './components/NoticePopup';
 import { useAppStore } from './store';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -51,6 +53,7 @@ const AnimatedRoutes = () => {
           <Route path="/settings" element={<StaffRoute><Settings /></StaffRoute>} />
           {/* Admin ONLY routes */}
           <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
+          <Route path="/notice" element={<AdminRoute><NoticeControl /></AdminRoute>} />
           {/* Staff (Admin + Team) routes */}
           <Route path="/projects" element={<Dashboard />} />
           <Route path="/client-dashboard" element={<ClientDashboard />} />
@@ -72,10 +75,18 @@ const AnimatedRoutes = () => {
   );
 };
 
+const HomeNoticePopup = () => {
+  const location = useLocation();
+  // Strictly and only show on the Home page ('/')
+  if (location.pathname !== '/') return null;
+  return <NoticePopup />;
+};
+
 const App = () => {
   return (
     <Router>
       <DataLoader />
+      <HomeNoticePopup />
       <Layout>
         <AnimatedRoutes />
       </Layout>

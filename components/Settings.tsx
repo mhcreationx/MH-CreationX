@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store';
 import { authService } from '../services/authService';
-import { Mail, Lock, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Mail, Lock, Shield, CheckCircle, AlertTriangle, Bell } from 'lucide-react';
+import NoticeControl from './NoticeControl';
 
 const Settings = () => {
     const { currentUser, updateUser } = useAppStore();
@@ -126,11 +127,31 @@ const Settings = () => {
                     >
                         Change Password
                     </button>
+                    {currentUser?.role === 'Admin' && (
+                        <button
+                            onClick={() => setActiveTab('notice')}
+                            className={`w-full text-left px-6 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-between ${activeTab === 'notice' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-white dark:bg-slate-900 text-slate-500 hover:bg-slate-50'}`}
+                        >
+                            <span>Notice / Popup</span>
+                            <Bell size={14} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Content */}
                 <div className="md:col-span-3">
                     <AnimatePresence mode="wait">
+                        {activeTab === 'notice' && (
+                            <motion.div
+                                key="notice"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="bg-transparent"
+                            >
+                                <NoticeControl />
+                            </motion.div>
+                        )}
                         {activeTab === 'account' && (
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}

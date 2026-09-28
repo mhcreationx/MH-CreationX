@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../store';
 import {
   LayoutDashboard, LogOut, Sun, Moon, Users,
-  Shield, UserCheck, DollarSign, User as UserIcon, Receipt, Menu, X, Activity, BarChart3, Phone, Mail, LogIn, Eye, EyeOff, MessageSquare
+  Shield, UserCheck, DollarSign, User as UserIcon, Receipt, Menu, X, Activity, BarChart3, Phone, Mail, LogIn, Eye, EyeOff, MessageSquare, Bell
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -138,6 +138,7 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             <NavLink to="/audit" icon={<Activity size={20} />} label="Audit Trail" active={location.pathname === '/audit'} onClick={() => setIsMobileMenuOpen(false)} />
             <NavLink to="/voucher" icon={<Receipt size={20} />} label="Ledger/Audit" active={location.pathname === '/voucher'} onClick={() => setIsMobileMenuOpen(false)} />
             {isAdmin && <NavLink to="/users" icon={<Shield size={20} />} label="Identities" active={location.pathname === '/users'} onClick={() => setIsMobileMenuOpen(false)} />}
+            {isAdmin && <NavLink to="/notice" icon={<Bell size={20} />} label="Notice / Announcement" active={location.pathname === '/notice'} onClick={() => setIsMobileMenuOpen(false)} />}
             <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 mt-10 mb-4">System</p>
             <NavLink to="/settings" icon={<UserIcon size={20} />} label="Settings" active={location.pathname === '/settings'} onClick={() => setIsMobileMenuOpen(false)} />
           </>
