@@ -140,8 +140,9 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     }
   };
 
-  const handleDownloadClick = (e: MouseEvent) => {
+  const handleDownloadClick = (e: React.MouseEvent | MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     if (isPaid) {
       if (project.downloadLink) {
         window.open(project.downloadLink, '_blank', 'noopener,noreferrer');

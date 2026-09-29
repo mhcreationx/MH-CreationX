@@ -83,6 +83,7 @@ const FluidSlider = ({ projects }: { projects: any[] }) => {
         {posters.map((_, i) => (
           <button
             key={i}
+            type="button"
             onClick={() => setIndex(i)}
             className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
               index === i
@@ -90,7 +91,7 @@ const FluidSlider = ({ projects }: { projects: any[] }) => {
                 : 'w-2 md:w-3 bg-slate-300/80 dark:bg-slate-700/80 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${i + 1}`}
-          />
+          ></button>
         ))}
       </div>
     </div>
@@ -474,16 +475,24 @@ const Dashboard: React.FC = () => {
                     {isAuthenticated ? (
                       <ProjectCard project={p} />
                     ) : (
-                      <button
-                        type="button"
+                      <div
+                        role="button"
+                        tabIndex={0}
                         onClick={() => {
                           setPreviewProject(p);
                           setPreviewActiveIndex(0);
                         }}
-                        className="block w-full text-left"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setPreviewProject(p);
+                            setPreviewActiveIndex(0);
+                          }
+                        }}
+                        className="block w-full text-left cursor-pointer focus:outline-none"
                       >
                         <ProjectCard project={p} />
-                      </button>
+                      </div>
                     )}
                   </motion.div>
                 ))}
