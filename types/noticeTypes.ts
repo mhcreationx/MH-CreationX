@@ -10,6 +10,7 @@ export interface NoticeConfig {
   frequency: 'session' | 'daily' | 'always';
   autoCloseEnabled?: boolean;
   autoCloseDuration?: number; // duration in seconds
+  isImportant?: boolean;      // enables subtle glowing pulse animation
   lastUpdated: string;
   updatedBy?: string;
 }
@@ -26,5 +27,6 @@ export const DEFAULT_NOTICE_CONFIG: NoticeConfig = {
   frequency: 'session',
   autoCloseEnabled: false,
   autoCloseDuration: 10,
+  isImportant: true,
   lastUpdated: new Date().toISOString()
 };

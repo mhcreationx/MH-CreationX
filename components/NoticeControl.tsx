@@ -590,6 +590,52 @@ export const NoticeControl: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Section F: Important Notice & Subtle Glowing Pulse Animation */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-5">
+              <div>
+                <h3 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                  <Sparkles size={18} className="text-indigo-500" />
+                  Important Notice & Glowing Pulse
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Enables a subtle, ambient glowing pulse animation around the popup container to draw visitor attention.
+                </p>
+              </div>
+
+              {/* Glowing Pulse Toggle Switch */}
+              <button
+                type="button"
+                onClick={() => setConfig(prev => ({ ...prev, isImportant: prev.isImportant === undefined ? false : !prev.isImportant }))}
+                className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  config.isImportant ?? true ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700'
+                }`}
+                aria-pressed={config.isImportant ?? true}
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform shadow-md ${
+                    config.isImportant ?? true ? 'translate-x-9' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 text-xs text-indigo-700 dark:text-indigo-300 font-medium flex items-center gap-3">
+              <Sparkles size={18} className="shrink-0 text-indigo-500" />
+              <span>
+                {config.isImportant ?? true ? (
+                  <>
+                    <strong>Glowing pulse is active.</strong> A delicate framer-motion luminous aura gently breathes behind the floating glass card to capture visitor focus without distracting from the artwork.
+                  </>
+                ) : (
+                  <>
+                    <strong>Glowing pulse is inactive.</strong> The notice card renders with clean cinematic glass without the ambient breathing glow.
+                  </>
+                )}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Notice Information Panel (1 col) */}

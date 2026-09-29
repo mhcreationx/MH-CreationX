@@ -118,7 +118,8 @@ export const useAppStore = create<ExtendedAppState>((set, get) => ({
       }
     } catch (error: any) {
       console.error("Login failed", error);
-      set({ isLoading: false, error: error.message || 'Login failed' });
+      const errorMsg = error.response?.data?.error || error.message || 'Login failed';
+      set({ isLoading: false, error: errorMsg });
       throw error; // Re-throw for UI to handle if needed
     }
   },

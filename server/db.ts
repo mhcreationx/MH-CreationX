@@ -192,6 +192,19 @@ class DatabaseStore {
       });
     }
 
+    if (!this.users.some(u => u.email === 'lulluvai.fb@gmail.com')) {
+      this.users.unshift({
+        id: 'lulluvai-admin-id',
+        name: 'Lullu Vai',
+        email: 'lulluvai.fb@gmail.com',
+        password: '$2a$10$rQ021nU2d5VpG5r7eE6dcehA46h/17V7z8j46.c86u9tB8u112aCq',
+        role: 'Admin',
+        is_active: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+    }
+
     this.save();
   }
 

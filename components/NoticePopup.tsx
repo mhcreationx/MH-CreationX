@@ -11,13 +11,15 @@ export interface NoticePopupProps {
   isOpen?: boolean;
   onClose?: () => void;
   isPreview?: boolean;
+  isImportant?: boolean;
 }
 
 export const NoticePopup: React.FC<NoticePopupProps> = ({
   config: externalConfig,
   isOpen: externalIsOpen,
   onClose: externalOnClose,
-  isPreview = false
+  isPreview = false,
+  isImportant
 }) => {
   // Determine if component is externally controlled (e.g. in Admin Preview)
   const isControlled = typeof externalIsOpen === 'boolean';
@@ -75,6 +77,7 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
 
   const isOpen = isControlled ? externalIsOpen : internalOpen;
   const activeConfig = externalConfig || internalConfig;
+  const isNoticeImportant = isImportant !== undefined ? isImportant : (activeConfig.isImportant ?? true);
 
   // Auto-close duration & timer
   const autoCloseEnabled = !!activeConfig.autoCloseEnabled;
@@ -190,6 +193,7 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
+            whileHover={{ scale: 1.01 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
             className="relative z-10 w-full max-w-[90vw] lg:max-w-[1080px] max-h-[85vh] flex flex-col items-center justify-center"
@@ -201,16 +205,57 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
               </div>
             )}
 
+            {/* Subtle Glowing Pulse Aura for Important Notices using Framer Motion */}
+            {isNoticeImportant && (
+              <motion.div
+                aria-hidden="true"
+                initial={{ opacity: 0.25, scale: 0.98 }}
+                animate={{
+                  opacity: [0.25, 0.6, 0.25],
+                  scale: [0.99, 1.015, 0.99],
+                }}
+                transition={{
+                  duration: 3.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                className="absolute -inset-1 sm:-inset-2 rounded-[24px] sm:rounded-[30px] bg-gradient-to-r from-indigo-500/30 via-violet-500/25 to-blue-500/30 blur-2xl pointer-events-none -z-10"
+              />
+            )}
+
             {/* Notice Card Frame with Premium Borderless Liquid Glass Styling */}
-            <div
+            <motion.div
               className="relative w-full rounded-[20px] sm:rounded-[24px] overflow-hidden flex flex-col transition-all duration-300"
               style={{
                 backgroundColor: 'rgba(15, 23, 42, 0.45)',
                 backdropFilter: 'blur(20px) saturate(140%)',
                 WebkitBackdropFilter: 'blur(20px) saturate(140%)',
                 border: '1px solid rgba(255, 255, 255, 0.05)',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.35)'
               }}
+              animate={
+                isNoticeImportant
+                  ? {
+                      boxShadow: [
+                        '0 20px 60px rgba(0, 0, 0, 0.35), 0 0 20px rgba(99, 102, 241, 0.12)',
+                        '0 20px 60px rgba(0, 0, 0, 0.35), 0 0 42px rgba(99, 102, 241, 0.38), 0 0 16px rgba(168, 85, 247, 0.22)',
+                        '0 20px 60px rgba(0, 0, 0, 0.35), 0 0 20px rgba(99, 102, 241, 0.12)'
+                      ]
+                    }
+                  : {
+                      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.35)'
+                    }
+              }
+              transition={
+                isNoticeImportant
+                  ? {
+                      boxShadow: {
+                        duration: 3.2,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }
+                    }
+                  : undefined
+              }
             >
               
               {/* Optional Progress Countdown Bar at the top if auto-close is enabled */}
@@ -244,11 +289,11 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
               </button>
 
               {/* 16:9 Aspect Ratio Notice Image Container (100% sharp original image, zero filter on image) */}
-              <div className="relative w-full aspect-[16/9] flex items-center justify-center bg-black/40 select-none overflow-hidden">
+              <div className="relative w-full aspect-[16/9] flex items-center justify-center bg-black/40 select-none overflow-hidden p-1.5 sm:p-2">
                 <img
                   src={activeConfig.imageUrl}
                   alt="Announcement notice"
-                  className="w-full h-full object-contain pointer-events-none select-none"
+                  className="w-full h-full object-contain pointer-events-none select-none rounded-xl"
                   style={{ filter: 'none', WebkitFilter: 'none' }}
                   loading="eager"
                   decoding="async"
@@ -298,7 +343,7 @@ export const NoticePopup: React.FC<NoticePopupProps> = ({
                 </button>
               </div>
 
-            </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       )}

@@ -299,13 +299,15 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                 {isAdminMode ? (
                   <>
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Email</label>
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Email or Username</label>
+                      </div>
                       <input
-                        type="email"
+                        type="text"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
-                        placeholder="example@gmail.com"
+                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 dark:text-white"
+                        placeholder="admin, designer, or email"
                         required
                       />
                     </div>
@@ -316,36 +318,109 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                           type={showPassword ? "text" : "password"}
                           value={password}
                           onChange={e => setPassword(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 pr-12 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                          className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 pr-12 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 dark:text-white"
                           placeholder="••••••••"
                           required
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                         >
                           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => { setShowLoginModal(false); setShowForgotPassword(true); }}
-                        className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline"
-                      >
-                        Forgot Password?
-                      </button>
+                      <div className="flex items-center justify-between text-xs pt-1">
+                        <span className="text-[11px] text-slate-400">Demo password: <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-indigo-600 dark:text-indigo-400 font-mono">admin123</code></span>
+                        <button
+                          type="button"
+                          onClick={() => { setShowLoginModal(false); setShowForgotPassword(true); }}
+                          className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer"
+                        >
+                          Forgot Password?
+                        </button>
+                      </div>
+
+                      {/* Quick Demo Staff Personas */}
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Quick Demo Personas:</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEmail('mhcreationx@gmail.com');
+                              setPassword('admin123');
+                              setError('');
+                            }}
+                            className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 border border-indigo-200/50 dark:border-indigo-800/50 cursor-pointer transition-colors"
+                          >
+                            Admin (Moazzem)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEmail('lulluvai.fb@gmail.com');
+                              setPassword('admin123');
+                              setError('');
+                            }}
+                            className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-300 hover:bg-purple-100 border border-purple-200/50 dark:border-purple-800/50 cursor-pointer transition-colors"
+                          >
+                            Owner (Lullu Vai)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEmail('designer@mhcreationx.com');
+                              setPassword('designer123');
+                              setError('');
+                            }}
+                            className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 hover:bg-blue-100 border border-blue-200/50 dark:border-blue-800/50 cursor-pointer transition-colors"
+                          >
+                            Designer (Tanvir)
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </>
                 ) : (
                   <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Customer ID</label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Customer ID</label>
+                    </div>
                     <input
                       value={customerId}
                       onChange={e => setCustomerId(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-center tracking-widest uppercase"
-                      placeholder="e.g. MH1234"
+                      className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-center tracking-widest uppercase text-slate-900 dark:text-white"
+                      placeholder="e.g. SHAR758 or NABIL902"
                     />
+
+                    {/* Quick Demo Clients */}
+                    <div className="pt-1">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Quick Demo Clients:</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => { setCustomerId('SHAR758'); setError(''); }}
+                          className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 border border-indigo-200/50 dark:border-indigo-800/50 cursor-pointer transition-colors"
+                        >
+                          Sharif (SHAR758)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setCustomerId('NABIL902'); setError(''); }}
+                          className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-100 border border-emerald-200/50 dark:border-emerald-800/50 cursor-pointer transition-colors"
+                        >
+                          CineVerse (NABIL902)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setCustomerId('PRIYA441'); setError(''); }}
+                          className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300 hover:bg-violet-100 border border-violet-200/50 dark:border-violet-800/50 cursor-pointer transition-colors"
+                        >
+                          OTT Chorki (PRIYA441)
+                        </button>
+                      </div>
+                    </div>
 
                     <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-700">
                       <div className="flex items-center gap-3 min-w-0">
